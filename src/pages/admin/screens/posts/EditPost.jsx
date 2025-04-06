@@ -28,13 +28,14 @@ const EditPost = () => {
   const navigate = useNavigate();
   const userState = useSelector((state) => state.user);
   const [initialPhoto, setInitialPhoto] = useState(null);
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState(undefined);
   const [body, setBody] = useState(null);
   const [categories, setCategories] = useState(null);
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState(null);
   const [postSlug, setPostSlug] = useState(slug);
   const [caption, setCaption] = useState("");
+  const [previewPhoto,setPreviewPhoto]=useState(null)
 
   const { data, isLoading, isError } = useQuery({
     queryFn: () => getSinglePost({ slug }),
@@ -47,6 +48,8 @@ const EditPost = () => {
     },
     refetchOnWindowFocus: false,
   });
+
+  console.log(initialPhoto,"initallllllllll");
 
   const {
     mutate: mutateUpdatePostDetail,
@@ -72,33 +75,35 @@ const EditPost = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setPhoto(file);
+    console.log(file);
+    if (file) {
+      setPhoto(URL.createObjectURL(file)); // Convert file to a preview URL
+      setPreviewPhoto(file)
+    }
+  
   };
 
   const handleUpdatePost = async () => {
     let updatedData = new FormData();
-
-    if (!initialPhoto && photo) {
-      updatedData.append("postPicture", photo);
-    } else if (initialPhoto && !photo) {
-      const urlToObject = async (url) => {
-        let reponse = await fetch(url);
-        let blob = await reponse.blob();
-        const file = new File([blob], initialPhoto, { type: blob.type });
-        return file;
-      };
-      const picture = await urlToObject(
-        stables.UPLOAD_FOLDER_BASE_URL + data?.photo
-      );
-
-      updatedData.append("postPicture", picture);
+  
+    if (previewPhoto) {
+      updatedData.append("postPicture", previewPhoto); // Append only if a new image is selected
     }
-
+  
     updatedData.append(
       "document",
-      JSON.stringify({ body, categories, title, tags, slug: postSlug, caption })
+      JSON.stringify({
+        body,
+        categories,
+        title,
+        tags,
+        slug: postSlug,
+        caption,
+      })
     );
 
+    console.log(updatedData,"update data");
+  
     mutateUpdatePostDetail({
       updatedData,
       slug,
@@ -109,7 +114,7 @@ const EditPost = () => {
   const handleDeleteImage = () => {
     if (window.confirm("Do you want to delete your Post picture?")) {
       setInitialPhoto(null);
-      setPhoto(null);
+      setPhoto(undefined);
     }
   };
 
@@ -127,15 +132,15 @@ const EditPost = () => {
             <label htmlFor="postPicture" className="w-full cursor-pointer">
               {photo ? (
                 <img
-                  src={URL.createObjectURL(photo)}
+                  src={photo}
                   alt={data?.title}
-                  className="rounded-xl w-full"
+                  className="rounded-xl w-full max-h-[20rem]"
                 />
               ) : initialPhoto ? (
                 <img
-                  src={stables.UPLOAD_FOLDER_BASE_URL + data?.photo}
+                  src={data?.photo}
                   alt={data?.title}
-                  className="rounded-xl w-full"
+                  className="rounded-xl w-full max-h-[20rem]"
                 />
               ) : (
                 <div className="w-full min-h-[200px] bg-blue-50/50 flex justify-center items-center">

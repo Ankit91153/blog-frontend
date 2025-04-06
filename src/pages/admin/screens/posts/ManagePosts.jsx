@@ -58,7 +58,7 @@ const ManagePosts = () => {
                   <img
                     src={
                       post?.photo
-                        ? stables.UPLOAD_FOLDER_BASE_URL + post?.photo
+                        ? post?.photo
                         : images.samplePostImage
                     }
                     alt={post.title}

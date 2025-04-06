@@ -36,7 +36,7 @@ const Comment = ({
       <img
         src={
           comment?.user?.avatar
-            ? stables.UPLOAD_FOLDER_BASE_URL + comment.user.avatar
+            ? comment.user.avatar
             : images.userImage
         }
         alt="user profile"

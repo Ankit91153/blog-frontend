@@ -73,6 +73,7 @@ const ProfilePage = () => {
     const { name, email, password } = data;
     mutate({ name, email, password });
   };
+  
 
   return (
     <MainLayout>
