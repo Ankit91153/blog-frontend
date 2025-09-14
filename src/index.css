@@ -10,4 +10,8 @@
   .active-editor-btn {
     @apply text-slate-800 bg-slate-200;
   }
+  
 }
+.incoming .material-symbols-outlined{
+  background-color: #1565D8 !important;
+  }

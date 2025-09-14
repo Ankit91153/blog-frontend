@@ -14,6 +14,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import { useSelector } from "react-redux";
 import parseJsonToHtml from "../../utils/parseJsonToHtml";
 import Editor from "../../components/editor/Editor";
+import BlogChatBot from "./components/BlogChatBot";
 
 const ArticleDetailPage = () => {
   const { slug } = useParams();
@@ -55,11 +56,7 @@ const ArticleDetailPage = () => {
             <BreadCrumbs data={breadCrumbsData} />
             <img
               className="rounded-xl w-full"
-              src={
-                data?.photo
-                  ? data?.photo
-                  : images.samplePostImage
-              }
+              src={data?.photo ? data?.photo : images.samplePostImage}
               alt={data?.title}
             />
             <div className="mt-4 flex gap-2">
@@ -106,6 +103,9 @@ const ArticleDetailPage = () => {
           </div>
         </section>
       )}
+
+<BlogChatBot/>
+     
     </MainLayout>
   );
 };
